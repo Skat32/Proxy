@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Logic.Abstracts;
 using Logic.Services;
 using Microsoft.AspNetCore.Builder;
@@ -28,9 +24,12 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_configuration.GetSection("ApiProxyOptions").Get<ApiProxyOptions>());
-            
+
             services.AddScoped<IProxyService, ProxyService>();
             services.AddScoped<IProxyCheckerService, ProxyCheckerService>();
+            services.AddScoped<ILoggerService, LoggerService>();
+
+            ProxyWorkerSettings.Enable = true;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
