@@ -23,8 +23,6 @@ namespace Logic.Services
             _context = context;
             _loggerService = loggerService;
         }
-
-        
         
         public Task<bool> CheckProxyAsync(string proxy)
         {
@@ -62,6 +60,13 @@ namespace Logic.Services
             }
         }
 
+        public void Switcher(bool enable)
+        {
+            ProxyWorkerSettings.Enable = enable;
+        }
+
+        #region | Private methods |
+
         private async Task<bool> CheckAsync(string proxy)
         {
             var timer = new Timer();
@@ -79,9 +84,11 @@ namespace Logic.Services
         {
             var result = await GetStringAsync(url, cancellationToken);
 
-            result = await GetStringAsync(url, cancellationToken);
             return result;
         }
+
+        #endregion
+        
         
         /// <summary>
         /// Получаем строку ответа

@@ -9,5 +9,11 @@ namespace Logic.Abstracts
         /// </summary>
         /// <returns></returns>
         Task StartWorkerAsync(int minutes);
+
+        /// <summary>
+        /// включает / выключает вечную проверку проксей
+        /// </summary>
+        /// <param name="enable"> включен или выключен </param>
+        void Switcher(bool enable);
     }
 }

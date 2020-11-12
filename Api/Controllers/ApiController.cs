@@ -36,5 +36,12 @@ namespace Api.Controllers
         {
             return await _proxyService.GetProxies(count);
         }
+
+        [HttpGet]
+        public async Task EnableAsync(bool enable)
+        {
+            ProxyWorkerSettings.Enable = enable;
+        }
+        
     }
 }
