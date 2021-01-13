@@ -5,13 +5,13 @@ namespace Logic.Abstracts
 {
     public interface IProxyCheckerService
     {
-        Task<bool> CheckProxy(string proxy);
+        Task<bool> CheckProxyAsync(string proxy);
         
-        Task<bool> CheckProxy(string ip, string port);
+        Task<bool> CheckProxyAsync(string ip, string port);
         
-        Task CheckProxies(IEnumerable<string> proxies);
+        Task CheckProxiesAsync(IEnumerable<string> proxies);
 
-        Task CheckProxies(Dictionary<string, string> proxies);
+        Task CheckProxiesAsync(Dictionary<string, string> proxies);
         
         
     }

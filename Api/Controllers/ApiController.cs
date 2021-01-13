@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Logic.Abstracts;
 using Microsoft.AspNetCore.Mvc;
@@ -22,19 +23,32 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<string> GetProxy()
         {
-            return await _proxyService.GetProxy();
+            var result = await _proxyService.GetProxy();
+            
+            return result.ToString();
         }
         
         [HttpGet]
         public async Task<IEnumerable<string>> GetProxies()
         {
-            return await _proxyService.GetProxies(_options.CountFreeProxies);
+            var result =  await _proxyService.GetProxies(_options.CountFreeProxies);
+
+            return result.Select(x => x.ToString());
         }
 
         [HttpGet]
         public async Task<IEnumerable<string>> GetProxies(int count)
         {
-            return await _proxyService.GetProxies(count);
+            var result =  await _proxyService.GetProxies(count);
+            
+            return result.Select(x => x.ToString());
         }
+
+        [HttpGet]
+        public void EnableAsync(bool enable)
+        {
+            ProxyWorkerSettings.Enable = enable;
+        }
+        
     }
 }

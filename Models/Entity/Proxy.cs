@@ -13,6 +13,7 @@ namespace Models.Entity
         public DateTime DateLastCheck { get; set; }
         public DateTime DateNexCheck { get; set; }
         public IEnumerable<Site> Sites { get; set; }
+        public Country Country { get; set; }
         public TypeProxy TypeProxy { get; set; }
 
         public override string ToString()

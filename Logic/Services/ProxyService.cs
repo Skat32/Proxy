@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataLayer;
 using Logic.Abstracts;
 using Microsoft.EntityFrameworkCore;
+using Models.Entity;
 
 namespace Logic.Services
 {
@@ -16,18 +19,35 @@ namespace Logic.Services
             _context = context;
         }
         
-        public async Task<string> GetProxy()
+        public async Task<Proxy> GetProxy()
         {
             var result = await _context.Proxies.SingleOrDefaultAsync(x => x.IsWorked && !x.IsDeleted);
 
-            return result.ToString();
+            return result;
         }
 
-        public Task<IEnumerable<string>> GetProxies(int count)
+        public async Task<IEnumerable<Proxy>> GetProxies(int count)
         {
             if (count > MaxCountProxies) count = MaxCountProxies;
-            
-            throw new System.NotImplementedException();
+
+            return await _context.Proxies.Where(x => x.IsWorked && !x.IsDeleted).Take(count).ToArrayAsync();
+        }
+
+        public async Task SaveProxyAsync(Proxy proxy)
+        {
+            await _context.Proxies.AddAsync(proxy);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveProxiesAsync(IEnumerable<Proxy> proxies)
+        {
+            await _context.Proxies.AddRangeAsync(proxies);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Proxy>> GetProxiesForWorker()
+        {
+            return _context.Proxies.Where(x => !x.IsDeleted && x.DateNexCheck > DateTime.Now);
         }
     }
 }
