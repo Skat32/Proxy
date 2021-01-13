@@ -15,18 +15,18 @@ namespace Logic.Services
 {
     public class ProxyCheckerService : IProxyCheckerService, IProxyCheckerWorker
     {
-        private readonly ProxyDbContext _context;
+        private readonly IProxyService _proxyService;
         private readonly ILoggerService _loggerService;
 
-        public ProxyCheckerService(ProxyDbContext context, ILoggerService loggerService)
+        public ProxyCheckerService(IProxyService proxyService, ILoggerService loggerService)
         {
-            _context = context;
+            _proxyService = proxyService;
             _loggerService = loggerService;
         }
         
-        public Task<bool> CheckProxyAsync(string proxy)
+        public async Task<bool> CheckProxyAsync(string proxy)
         {
-            throw new System.NotImplementedException();
+            return await CheckAsync(proxy);
         }
 
         public Task<bool> CheckProxyAsync(string ip, string port)
@@ -48,15 +48,17 @@ namespace Logic.Services
         {
             while (ProxyWorkerSettings.Enable)
             {
-                var proxies = await _context.Proxies
-                    .Where(proxy => !proxy.IsDeleted && proxy.DateNexCheck > DateTime.Now).ToListAsync();
+                var proxies = await _proxyService.GetProxiesForWorker();
 
-                foreach (var proxy in proxies)
+                var resultProxies = new List<Proxy>();
+                foreach (var proxy in proxies.ToList())
                 {
-                    
+                    // code
+
+                    resultProxies.Add(proxy);
                 }
 
-                await _context.SaveChangesAsync();
+                await _proxyService.SaveProxiesAsync(resultProxies);
             }
         }
 
@@ -125,6 +127,18 @@ namespace Logic.Services
         protected object GetCookies()
         {
             return new { };
+        }
+
+        /// <summary>
+        /// Парсим прокси из строки на отдельный ip и port
+        /// </summary>
+        /// <param name="proxy"></param>
+        /// <returns></returns>
+        private static (string ip, string port) ParseProxy(string proxy)
+        {
+            var proxySplit = proxy.Split(':');
+
+            return (proxySplit[0], proxySplit[1]);
         }
     }
 }
